@@ -13,14 +13,13 @@ RUN groupadd --system mysql \
     && touch /var/log/mysql_general.log && chmod 666 /var/log/mysql_general.log \
     && mysql_install_db --user=mysql --skip-name-resolve --rpm
 
-COPY start.sh kill.sh /
+COPY start-mysql stop-mysql /bin/
 
-# Wrap your MySQL commands with ./start,sh and /kill.sh.
+# Wrap your MySQL commands with start-mysql and stop-mysql
 # Anything inside will have access to MySQL server
-RUN /start.sh && \
+RUN start-mysql && \
     ./mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql && \
-    echo "status" | mysql && \
-    /kill.sh
+    stop-mysql
 
 EXPOSE 3306
 

@@ -13,8 +13,9 @@ FROM zanox/docker-mysql
 
 COPY schema.sql /
 
-RUN /start.sh && \
+RUN start-mysql && \
     mysql < schema.sql && \
-    /kill.sh
+    echo "status" | mysql && \
+    stop-mysql
 
 ```
