@@ -1,8 +1,9 @@
 FROM debian
+MAINTAINER Yarek Tyshchenko <yarek.tyshchenko@affiliatewindow.com>
 
 # setup mysql
 RUN apt-get update \
-	&& apt-get install --assume-yes --no-install-recommends mysql-server-core-5.5 mysql-client-5.5 \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends mysql-server-core-5.5 mysql-client-5.5 \
 	&& apt-get download mysql-server-5.5 && dpkg-deb -R mysql-server-5.5_*.deb foo \
 	&& cp foo/usr/bin/mysql_tzinfo_to_sql . && rm -r foo mysql-server-5.5_*.deb \
 	&& apt-get clean && rm -r /var/lib/apt/lists/*

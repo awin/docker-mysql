@@ -11,8 +11,11 @@ run:
 stop:
 	@docker rm -vf docker-mysql ||:
 
+pull:
+	docker pull $(repo)/zanox/docker-mysql
+
 push:
 	docker tag -f zanox/docker-mysql $(repo)/zanox/docker-mysql
 	docker push $(repo)/zanox/docker-mysql
 
-.PHONY: all build run stop push
+.PHONY: all build run stop pull push
