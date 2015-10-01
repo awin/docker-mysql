@@ -18,6 +18,7 @@ COPY start-mysql stop-mysql /bin/
 # Wrap your MySQL commands with start-mysql and stop-mysql
 # Anything inside will have access to MySQL server
 RUN start-mysql && \
+    echo "CREATE USER 'root'@'%'; GRANT ALL ON *.* TO 'root'@'%';" | mysql && \
     ./mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql && \
     stop-mysql
 
