@@ -1,10 +1,10 @@
-FROM ubuntu:14.04
+FROM debian
 
 # setup mysql
 RUN apt-get update \
 	&& apt-get install --assume-yes --no-install-recommends mysql-server-core-5.5 mysql-client-5.5 \
-	&& apt-get download mysql-server-5.5 && dpkg-deb -R mysql-server-5.5_5.5.44-0ubuntu0.14.04.1_amd64.deb foo \
-	&& cp foo/usr/bin/mysql_tzinfo_to_sql . && rm -r foo mysql-server-5.5_5.5.44-0ubuntu0.14.04.1_amd64.deb \
+	&& apt-get download mysql-server-5.5 && dpkg-deb -R mysql-server-5.5_*.deb foo \
+	&& cp foo/usr/bin/mysql_tzinfo_to_sql . && rm -r foo mysql-server-5.5_*.deb \
 	&& apt-get clean && rm -r /var/lib/apt/lists/*
 
 RUN groupadd --system mysql \
