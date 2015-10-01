@@ -9,21 +9,17 @@ RUN apt-get update \
 
 RUN groupadd --system mysql \
     && useradd --system --gid mysql --home /var/lib/mysql mysql \
-    && mkdir -p /var/run/mysqld && chown mysql:mysql /var/run/mysqld
-RUN mysql_install_db --user=mysql --skip-name-resolve --rpm
-
-
-# run init and import scripts
-#COPY init.sql /
-
-# mysql general log file, if we want to enable it
-RUN touch /var/log/mysql_general.log && chmod 666 /var/log/mysql_general.log
+    && mkdir -p /var/run/mysqld && chown mysql:mysql /var/run/mysqld \
+    && touch /var/log/mysql_general.log && chmod 666 /var/log/mysql_general.log \
+    && mysql_install_db --user=mysql --skip-name-resolve --rpm
 
 COPY start.sh kill.sh /
 
-RUN /start.sh && ./mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql && /kill.sh
-
-RUN /start.sh && echo "status" | mysql && \
+# Wrap your MySQL commands with ./start,sh and /kill.sh.
+# Anything inside will have access to MySQL server
+RUN /start.sh && \
+    ./mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql && \
+    echo "status" | mysql && \
     /kill.sh
 
 EXPOSE 3306
