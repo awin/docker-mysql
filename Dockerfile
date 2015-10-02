@@ -1,7 +1,7 @@
 FROM debian
 MAINTAINER Yarek Tyshchenko <yarek.tyshchenko@affiliatewindow.com>
 
-# setup mysql
+# Install bare MySQL server + pull down timezone tables
 RUN apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends mysql-server-core-5.5 mysql-client-5.5 \
 	&& apt-get download mysql-server-5.5 && dpkg-deb -R mysql-server-5.5_*.deb foo \
