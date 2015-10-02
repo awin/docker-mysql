@@ -1,30 +1,50 @@
-Docker MySQL Database
-=====================
+MySQL Base Image
+================
 
-Alternative Docker MySQL image optimised for fast startup time
+This is a MySQL Database image tuned for fast start up times, designed to be
+extended for purposes of providing fixtures.
 
-This image is intended to be extended by your own Dockerfile, with custom init.sql and build steps
+The Official MySQL Image, while Ok to use as a normal database, does too many
+things on startup. Instead we install the database directory and preload the
+schema during build and commit the result to disk.
 
-Extending the image
-===================
+The result is an image that, once built, can be stopped and started in a
+fraction of a second, making it suitable to use as part of your integration
+test suite.
 
-In your project add a Dockerfile for your fixtures database:
+How to use this image
+---------------------
+
+Extend this image within your `Dockerfile` using the FROM directive. Do all the
+setup work needed during the build. You can use any tools you want as long as
+you wrap the commands in `start-mysql` and `stop-mysql`. The changes to the
+database directory will then be commited as a file system layer by docker.
+
+The reasoning behind using the start and stop commands is that it allows you
+to split up your setup procedure and leverage docker's caching mechanism,
+rather than executing all the steps as one large shell script.
+
+The dissadvante is of course COW duplication of any touched tables for each RUN
+directive.
+
+Example Dockerfile:
 
 ```
-FROM zanox/mysql
-
 COPY schema.sql /
-
 RUN start-mysql && \
     mysql < schema.sql && \
     echo "status" | mysql && \
     stop-mysql
 ```
 
-Also provide a Makefile so the database can be built simply (You can copy this Makefile to use as template)
 
-Then simply provide a static schema SQL file that can run your project, start and stop the database as much
-as you like, It should always take fractions of a second.
+Notes on the Makefile
+=====================
+
+You can try this project out by running `make build run` and connecting to
+default mysql port on your dockerhost. The Makefile makes trying the project
+out consistent and simple. I would encourage you to use it as a template for
+your own project.
 
 License
 =======
