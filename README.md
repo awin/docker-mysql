@@ -1,6 +1,8 @@
 MySQL Base Image
 ================
 
+[![](https://badge.imagelayers.io/zanox/mysql:latest.svg)](https://imagelayers.io/?images=zanox/mysql:latest 'Zanox MySQL Image Layers')
+
 This is a MySQL Database image tuned for fast start up times, designed to be
 extended for purposes of providing fixtures.
 
