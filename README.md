@@ -26,7 +26,7 @@ The reasoning behind using the start and stop commands is that it allows you
 to split up your setup procedure and leverage docker's caching mechanism,
 rather than executing all the steps as one large shell script.
 
-The dissadvante is of course COW duplication of any touched tables for each RUN
+The disadvantage is of course COW duplication of any touched tables for each RUN
 directive.
 
 Example Dockerfile:
