@@ -39,11 +39,12 @@ RUN start-mysql && \
     stop-mysql
 ```
 
+MySQL Daemon itself is started by S6. You can add in more services to start in together with MySQL by adding the service definitions to run files: `services.d/<service_name>/run`. Test that your services work by running `make run` followed by manually invoking S6: `/init`
 
 Notes on the Makefile
 =====================
 
-You can try this project out by running `make build run` and connecting to
+You can try this project out by running `make build start` and connecting to
 default mysql port on your dockerhost. The Makefile makes trying the project
 out consistent and simple. I would encourage you to use it as a template for
 your own project.
@@ -52,7 +53,7 @@ License
 =======
 
 ```
-Copyright (c) 2015, Digital Window Limited
+Copyright (c) 2016, Digital Window Limited
 All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

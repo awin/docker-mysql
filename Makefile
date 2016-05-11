@@ -6,10 +6,14 @@ build:
 	docker build -t zanox/mysql .
 
 run:
-	docker run --name docker-mysql -d -p 3306:3306 zanox/mysql
+	docker run --rm -it zanox/mysql bash
+
+start: stop
+	docker run -d --name zanox/mysql -p 3306:3306 \
+			docker-mysql
 
 stop:
-	@docker rm -vf docker-mysql ||:
+	@docker rm -vf zanox/mysql ||:
 
 pull:
 	docker pull $(repo)/zanox/mysql
@@ -18,4 +22,4 @@ push:
 	docker tag -f zanox/mysql $(repo)/zanox/mysql
 	docker push $(repo)/zanox/mysql
 
-.PHONY: all build run stop pull push
+.PHONY: all build run start stop pull push

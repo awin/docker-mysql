@@ -3,10 +3,16 @@ MAINTAINER Yarek Tyshchenko <yarek.tyshchenko@affiliatewindow.com>
 
 # Install bare MySQL server + pull down timezone tables
 RUN apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends mysql-server-core-5.5 mysql-client-5.5 \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends mysql-server-core-5.5 mysql-client-5.5 curl ca-certificates \
 	&& apt-get download mysql-server-5.5 && dpkg-deb -R mysql-server-5.5_*.deb foo \
 	&& cp foo/usr/bin/mysql_tzinfo_to_sql . && rm -r foo mysql-server-5.5_*.deb \
 	&& apt-get clean && rm -r /var/lib/apt/lists/*
+
+# Install S6
+RUN curl -sL "https://github.com/just-containers/s6-overlay/releases/download/v1.16.0.0/s6-overlay-amd64.tar.gz" | tar xz -C /
+
+# Copy in s6 services config
+COPY services.d /etc/services.d
 
 RUN groupadd --system mysql \
     && useradd --system --gid mysql --home /var/lib/mysql mysql \
@@ -25,4 +31,5 @@ RUN start-mysql && \
 
 EXPOSE 3306
 
-CMD ["mysqld", "--user=mysql", "--skip-name-resolve", "--bind-address=0.0.0.0", "--pid-file=/var/run/mysqld/mysqld.pid", "--open-files-limit=5120"]
+# MySQLd is started with S6. See services.d/mysqld/run
+CMD ["/init"]
