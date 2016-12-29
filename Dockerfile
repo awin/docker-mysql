@@ -22,6 +22,9 @@ RUN groupadd --system mysql \
 
 COPY start-mysql stop-mysql /bin/
 
+# MySQL server needs this dir to run
+RUN mkdir -p /var/lib/mysql-files
+
 # Wrap your MySQL commands with start-mysql and stop-mysql
 # Anything inside will have access to MySQL server
 RUN start-mysql && \
