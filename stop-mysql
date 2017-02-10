@@ -1,5 +1,5 @@
 #!/bin/bash
 
 echo -ne "Killing mysql ... ";
-kill $(cat /var/run/mysqld/mysqld.pid)
+mysqladmin shutdown
 echo "Done"
