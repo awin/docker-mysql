@@ -9,11 +9,10 @@ run:
 	docker run --rm -it zanox/mysql bash
 
 start: stop
-	docker run -d --name zanox/mysql -p 3306:3306 \
-			docker-mysql
+	docker run -d --name mysql -p 3306:3306 zanox/mysql
 
 stop:
-	@docker rm -vf zanox/mysql ||:
+	@docker rm -vf mysql ||:
 
 pull:
 	docker pull $(repo)/zanox/mysql
