@@ -1,14 +1,16 @@
-MySQL Base Image
-================
+MySQL Fixtures Base Image
+=========================
 
-[![](https://badge.imagelayers.io/zanox/mysql:latest.svg)](https://imagelayers.io/?images=zanox/mysql:latest 'Zanox MySQL Image Layers')
+[![](https://images.microbadger.com/badges/image/zanox/mysql.svg)](https://microbadger.com/images/zanox/mysql 'Zanox MySQL Image Layers')
+[![](https://images.microbadger.com/badges/version/zanox/mysql.svg)](https://microbadger.com/images/zanox/mysql "Latest tag")
 
 This is a MySQL Database image tuned for fast start up times, designed to be
 extended for purposes of providing fixtures.
 
 The Official MySQL Image, while Ok to use as a normal database, does too many
 things on startup. Instead we install the database directory and preload the
-schema during build and commit the result to disk.
+schema during build. This allows us to use Docker's copy-on-write filesystem to
+efficiently discard any data written after container start.
 
 The result is an image that, once built, can be stopped and started in a
 fraction of a second, making it suitable to use as part of your integration
@@ -18,28 +20,31 @@ How to use this image
 ---------------------
 
 Extend this image within your `Dockerfile` using the FROM directive. Do all the
-setup work needed during the build. You can use any tools you want as long as
-you wrap the commands in `start-mysql` and `stop-mysql`. The changes to the
+fixture seed during the build. You can use any tools you want as long as
+you wrap the commands with `start-mysql` and `stop-mysql`. The changes to the
 database directory will then be commited as a file system layer by docker.
 
+Example Dockerfile:
+```
+FROM zanox/mysql
+
+COPY schema.sql /
+RUN start-mysql && \
+    mysql < /schema.sql && \
+    stop-mysql
+```
+
 The reasoning behind using the start and stop commands is that it allows you
-to split up your setup procedure and leverage docker's caching mechanism,
-rather than executing all the steps as one large shell script.
+to split up your setup procedure and leverage docker's caching mechanism
+with fixtures that are large and edited less often placed higher up.
 
 The disadvantage is of course COW duplication of any touched tables for each RUN
 directive.
 
-Example Dockerfile:
-
-```
-COPY schema.sql /
-RUN start-mysql && \
-    mysql < schema.sql && \
-    echo "status" | mysql && \
-    stop-mysql
-```
-
-MySQL Daemon itself is started by S6. You can add in more services to start in together with MySQL by adding the service definitions to run files: `services.d/<service_name>/run`. Test that your services work by running `make run` followed by manually invoking S6: `/init`
+MySQL Daemon itself is started by S6. You can add in more services to start in
+together with MySQL by adding the service definitions to run files:
+`services.d/<service_name>/run`. Test that your services work by running `make
+run` followed by manually invoking S6: `/init`
 
 Notes on the Makefile
 =====================
