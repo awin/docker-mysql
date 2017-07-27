@@ -1,4 +1,4 @@
-repo ?= docker.io
+registry ?= docker.io
 
 all: build
 
@@ -15,10 +15,10 @@ stop:
 	@docker rm -vf mysql ||:
 
 pull:
-	docker pull $(repo)/zanox/mysql
+	docker pull $(registry)/zanox/mysql
 
 push:
-	docker tag -f zanox/mysql $(repo)/zanox/mysql
-	docker push $(repo)/zanox/mysql
+	docker tag zanox/mysql $(registry)/zanox/mysql
+	docker push $(registry)/zanox/mysql
 
 .PHONY: all build run start stop pull push
