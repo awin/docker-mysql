@@ -17,8 +17,9 @@ stop:
 pull:
 	docker pull $(registry)/zanox/mysql
 
+version ?= latest
 push:
-	docker tag zanox/mysql $(registry)/zanox/mysql
-	docker push $(registry)/zanox/mysql
+	docker tag zanox/mysql $(registry)/zanox/mysql:$(version)
+	docker push $(registry)/zanox/mysql:$(version)
 
 .PHONY: all build run start stop pull push
