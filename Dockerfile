@@ -10,7 +10,7 @@ RUN set -ex; \
 	rm -r "$GNUPGHOME"; \
 	apt-key list > /dev/null
 
-RUN echo "deb http://repo.mysql.com/apt/debian/ jessie mysql-5.6" > /etc/apt/sources.list.d/mysql.list && \
+RUN echo "deb http://repo.mysql.com/apt/debian/ jessie mysql-5.7" > /etc/apt/sources.list.d/mysql.list && \
     { \
         echo mysql-community-server mysql-community-server/root-pass password ''; \
         echo mysql-community-server mysql-community-server/re-root-pass password ''; \
