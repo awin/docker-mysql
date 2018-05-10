@@ -27,6 +27,9 @@ COPY services.d /etc/services.d
 
 COPY start-mysql stop-mysql /bin/
 
+# force MySQL client connection and both client and server default charsets to be UTF-8
+RUN printf "[client]\ndefault-character-set=utf8\n[mysql]\ndefault-character-set=utf8\n[mysqld]\ncharacter-set-server=utf8" >> /etc/mysql/conf.d/charset.cnf
+
 # Wrap your MySQL commands with start-mysql and stop-mysql
 # Anything inside will have access to MySQL server
 RUN start-mysql && \
