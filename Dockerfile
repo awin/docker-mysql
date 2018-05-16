@@ -30,9 +30,15 @@ COPY start-mysql stop-mysql /bin/
 # force MySQL client connection and both client and server default charsets to be UTF-8
 RUN printf "[client]\ndefault-character-set=utf8\n[mysql]\ndefault-character-set=utf8\n[mysqld]\ncharacter-set-server=utf8" >> /etc/mysql/conf.d/charset.cnf
 
+
 # Wrap your MySQL commands with start-mysql and stop-mysql
 # Anything inside will have access to MySQL server
-RUN start-mysql && \
+#
+# The workaround to make build work on Debian 9 is to 'touch' the files used by MySQL.
+# Explanation here:
+# https://docs.docker.com/storage/storagedriver/overlayfs-driver/
+RUN find /var/lib/mysql -type f -exec touch {} \; && \
+    start-mysql && \
     echo "status" | mysql && \
     echo "CREATE USER 'root'@'%'; GRANT ALL ON *.* TO 'root'@'%';" | mysql && \
     stop-mysql

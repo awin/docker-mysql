@@ -4,4 +4,3 @@ echo -ne "Starting mysql ... ";
 mysqld --user=mysql --skip-networking --skip-name-resolve --pid-file=/var/run/mysqld/mysqld.pid > /dev/null 2>&1 &
 mysqladmin --silent --wait=30 ping > /dev/null
 echo "Done";
-
