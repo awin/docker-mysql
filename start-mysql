@@ -1,7 +1,12 @@
 #!/bin/bash
 
 echo -ne "Starting mysql ... ";
+
+# The workaround to make build work on Debian 9 is to 'touch' the files used by MySQL.
+# Explanation here:
+# https://docs.docker.com/storage/storagedriver/overlayfs-driver/
+find /var/lib/mysql -type f -exec touch {} \;
+
 mysqld --user=mysql --skip-networking --skip-name-resolve --pid-file=/var/run/mysqld/mysqld.pid > /dev/null 2>&1 &
 mysqladmin --silent --wait=30 ping > /dev/null
 echo "Done";
-
